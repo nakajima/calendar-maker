@@ -1,0 +1,54 @@
+Calendar Maker
+==============
+
+Putting a calendar on a web page is easy now. Also, you can add events to a 
+calendar, which are denoted by adding a custom class name to that day, allowing
+you to style it differently, or even define behavior for that day via unobtrusive
+Javascript.
+
+
+Usage
+=====
+
+You can create a new calendar object by simply running "Calendar.new" from either
+your controller or your view. You can specify the month and year of your calendar
+like so:
+
+  @calendar = Calendar.new(:month => 'oct', :year => 2001)
+  
+If you'd like to add events to the calendar object, you can simply pass it an
+array of objects via its #add method, then designating an attribute to signify the
+event date using the :schedule_for option. This option is not optional. If you don't
+include it, an ArgumentError exception will be raised.
+
+You can also specify which class should be added to days that have certain events
+by using the :html_class option. If you don't provide one, then the plugin will just
+add the :schedule_for value as a class name.
+
+Finally, use the #generate method to actually render the HTML code for your calendar.
+
+Example
+=======
+
+In your controller...
+
+  class PartyController < ApplicationController
+    def index
+      @parties  = Party.find(:all)
+      @calendar = Calendar.new
+      @calendar.add @parties, :schedule_for => :party_date, :html_class => "party_time"
+      render :action => :index
+    end
+  end
+
+In your view...
+
+  <%= @calendar.generate %>
+
+Todo
+====
+
+- Clean it up. Big time.
+- Finish documentation.
+
+Copyright (c) 2007 Pat Nakajima, released under the MIT license
