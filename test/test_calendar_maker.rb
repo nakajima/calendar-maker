@@ -1,9 +1,9 @@
-require File.join(File.dirname(__FILE__), '../../../../config/environment')
+require File.join(File.dirname(__FILE__), '..', 'lib/calendar_maker.rb')
 require 'rubygems'
 require 'mocha'
 require 'test/unit'
 
-class CalendarMakerTest < Test::Unit::TestCase
+class TestCalendarMaker < Test::Unit::TestCase
   def setup
     @calendar = Calendar.new
   end
