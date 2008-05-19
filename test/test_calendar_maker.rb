@@ -1,11 +1,16 @@
-require File.join(File.dirname(__FILE__), '..', 'lib/calendar_maker.rb')
+$:.unshift(File.join(File.dirname(__FILE__), '..'))
+
+require 'time'
 require 'rubygems'
 require 'mocha'
 require 'test/unit'
+require 'lib/calendar_maker.rb'
 
 class TestCalendarMaker < Test::Unit::TestCase
   def setup
-    @calendar = Calendar.new
+    @calendar          = Calendar.new
+    @default_table     = File.read('test/fixtures/default_table.html').chomp
+    @table_with_events = File.read('test/fixtures/table_with_events.html').chomp
   end
 
   def test_should_have_calendar_class
@@ -38,10 +43,22 @@ class TestCalendarMaker < Test::Unit::TestCase
   end
   
   def test_should_return_day_count_for_months
-    months = {  'jan' => 31, 'feb' => 28, 'mar' => 31, 'apr' => 30, 'may' => 31, 'jun' => 30,
-                'jul' => 31, 'aug' => 31, 'sep' => 30, 'oct' => 31, 'nov' => 30, 'dec' => 31  }
-    months.each do |mon, count|
-      assert_equal count, Calendar.new(:month => mon).days_in_month
+    leap_months = {
+      'jan' => 31, 
+      'feb' => 29, 
+      'mar' => 31, 
+      'apr' => 30, 
+      'may' => 31, 
+      'jun' => 30, 
+      'jul' => 31, 
+      'aug' => 31, 
+      'sep' => 30, 
+      'oct' => 31, 
+      'nov' => 30, 
+      'dec' => 31
+    }
+    leap_months.each do |mon, count|
+      assert_equal count, Calendar.new(:month => mon, :year => 2008).days_in_month
     end
   end
 
@@ -61,9 +78,10 @@ class TestCalendarMaker < Test::Unit::TestCase
   def test_should_add_events_and_set_instance_variable
     todos = []
     5.times { todos << stub(:due_at_date => Time.now) }
-    assert_difference '@calendar.instance_variable_get(:@events).length' do
-      @calendar.add todos, :schedule_for => :due_at_date
-    end
+    assert_not_equal(
+      @calendar.instance_variable_get(:@events).length, 
+      @calendar.add(todos, :schedule_for => :due_at_date)
+    )
   end
   
   def test_should_require_schedule_for_option
@@ -77,7 +95,7 @@ class TestCalendarMaker < Test::Unit::TestCase
   def test_should_assign_event_to_appropriate_day
     todos = []
     todos << todo_for_today = stub(:due_at_date => Time.now)
-    todos << todo_for_yesterday = stub(:due_at_date => Time.now - 1.day)
+    todos << todo_for_yesterday = stub(:due_at_date => Time.now - days(1))
     @calendar.add todos, :schedule_for => :due_at_date, :html_class => "today"
     todos.each do |todo|
       assert @calendar.instance_variable_get(:@events).include?('today')
@@ -88,17 +106,19 @@ class TestCalendarMaker < Test::Unit::TestCase
   
   def test_should_generate_calendar_html
     @calendar = Calendar.new(:month => "oct", :year => 2007)
-    result = File.read("#{File.dirname(__FILE__)}/fixtures/default_table.html")
-    assert_equal result, @calendar.generate
+    assert_equal @default_table, @calendar.generate 
   end
   
   def test_should_add_class_names_to_days_with_events
     n = Time.parse("Mon Oct 22 21:55:08 -0400 2007")
     Time.stubs(:now).returns(n)
     @calendar = Calendar.new(:month => "oct", :year => 2007)
-    @calendar.add [stub(:due_date => Time.now + 5.days), stub(:due_date => Time.now + 3.days)], :html_class => 'due_date_class', :schedule_for => :due_date
-    result = File.read("#{File.dirname(__FILE__)}/fixtures/table_with_events.html")
-    assert_equal result, @calendar.generate
+    @calendar.add [stub(:due_date => Time.now + days(5)), stub(:due_date => Time.now + days(3))], :html_class => 'due_date_class', :schedule_for => :due_date
+    assert_equal @table_with_events, @calendar.generate
   end
-  
+
+private
+  def days(number_of_days)
+    60 * 60 * 24 * number_of_days
+  end
 end

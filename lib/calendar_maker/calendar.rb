@@ -1,6 +1,6 @@
 class Calendar
   include ViewHelpers
-  
+
   def initialize(options={})
     options[:month] ||= Time.now.month
     options[:year]  ||= Time.now.year
