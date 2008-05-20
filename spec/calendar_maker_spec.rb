@@ -16,10 +16,6 @@ describe Calendar do
       Calendar.new(:month => 5).month.should == 5
     end
 
-    it 'should accept string month names' do
-      Calendar.new(:month => '4').month.should == 4
-    end
-
     it 'should default to the current month' do
       Calendar.new.month.should == Time.now.month
     end
@@ -28,11 +24,6 @@ describe Calendar do
   describe '#year' do
     it 'should retain the year of the calendar' do
       Calendar.new(:year => 2008).year.should == 2008
-    end
-
-
-    it 'should accept string years' do
-      Calendar.new(:year => '1999').year.should == 1999
     end
 
     it 'should default to the current year' do

@@ -1,17 +1,17 @@
 class Calendar
   include ViewHelpers
 
+  # <tt>:month</tt> <Integer>:: the month for the calendar
+  # <tt>:year</tt> <Integer>:: the year for the calendar
+  attr_reader :month, :year
+
   def initialize(options={})
-    options[:month] ||= Time.now.month
-    options[:year]  ||= Time.now.year
+    @month  = options[:month] || Time.now.month
+    @year   = options[:year]  || Time.now.year
     @events = options[:events] || []
-    @page   = Time.utc(options[:year], options[:month])
+    @page = Time.utc(@year, @month)
     @days   = { }; days_in_month.times { |i| @days[i] = { :events => [] } }
   end
-  
-  def month; @page.month; end
-  
-  def year;  @page.year;  end
   
   def day
     return @days
