@@ -4,24 +4,24 @@ Autotest.add_hook :initialize do |at|
 
   at.clear_mappings
 
-  # Ignore anything that doesn't affect test outcomes
+  # Ignore anything that don't affect spec outcomes
   at.add_exception %r%\.git|MIT-LICENSE|README|Rakefile|init\.rb|install\.rb|tasks|uninstall\.rb%
 
-  # Tests should run themselves
-  at.add_mapping %r%^test/test_.*\.rb$% do |f, _|
+  # Specs should run themselves
+  at.add_mapping %r%^spec/.*_spec\.rb$% do |f, _|
     f
   end
 
-  # Changes to fixtures should cause the test to run
-  at.add_mapping %r%^test/fixtures/(.*)$% do |f, _|
-    at.files_matching %r%^test/test_.*\.rb$%
+  # Changes to fixtures should cause the spec to run
+  at.add_mapping %r%^spec/fixtures/(.*)$% do |f, _|
+    at.files_matching %r%^spec/.*_spec\.rb$%
   end
 
   at.add_mapping %r%^lib/calendar_maker\.rb$% do
-    at.files_matching %r%^test/test_.*\.rb$%
+    at.files_matching %r%^spec/.*_spec\.rb$%
   end
 
   at.add_mapping %r%^lib/calendar_maker/.*\.rb$% do |_, m|
-    at.files_matching %r%^test/test_.*\.rb$%
+    at.files_matching %r%^spec/.*_spec\.rb$%
   end
 end
