@@ -2,11 +2,11 @@ $:.unshift(File.join(File.dirname(__FILE__), '..'))
 
 require 'time'
 require 'rubygems'
-require 'mocha'
+require 'spec'
 require 'test/unit'
 require 'lib/calendar_maker.rb'
 
-class TestCalendarMaker < Test::Unit::TestCase
+describe Calendar do
   def setup
     @calendar          = Calendar.new
     @default_table     = File.read('test/fixtures/default_table.html').chomp
@@ -77,7 +77,7 @@ class TestCalendarMaker < Test::Unit::TestCase
   
   def test_should_add_events_and_set_instance_variable
     todos = []
-    5.times { todos << stub(:due_at_date => Time.now) }
+    5.times { todos << mock('todo', :due_at_date => Time.now) }
     assert_not_equal(
       @calendar.instance_variable_get(:@events).length, 
       @calendar.add(todos, :schedule_for => :due_at_date)
@@ -94,8 +94,8 @@ class TestCalendarMaker < Test::Unit::TestCase
   
   def test_should_assign_event_to_appropriate_day
     todos = []
-    todos << todo_for_today = stub(:due_at_date => Time.now)
-    todos << todo_for_yesterday = stub(:due_at_date => Time.now - days(1))
+    todos << todo_for_today = stub('today', :due_at_date => Time.now)
+    todos << todo_for_yesterday = stub('yesterday', :due_at_date => Time.now - days(1))
     @calendar.add todos, :schedule_for => :due_at_date, :html_class => "today"
     todos.each do |todo|
       assert @calendar.instance_variable_get(:@events).include?('today')
@@ -111,9 +111,16 @@ class TestCalendarMaker < Test::Unit::TestCase
   
   def test_should_add_class_names_to_days_with_events
     n = Time.parse("Mon Oct 22 21:55:08 -0400 2007")
-    Time.stubs(:now).returns(n)
-    @calendar = Calendar.new(:month => "oct", :year => 2007)
-    @calendar.add [stub(:due_date => Time.now + days(5)), stub(:due_date => Time.now + days(3))], :html_class => 'due_date_class', :schedule_for => :due_date
+    Time.stub!(:now).and_return(n)
+    @calendar = Calendar.new(:month => 'oct', :year => 2007)
+    @calendar.add(
+      [
+        mock('5 days from now', :due_date => Time.now + days(5)), 
+        mock('3 days from now', :due_date => Time.now + days(3))
+      ], 
+      :html_class   => 'due_date_class', 
+      :schedule_for => :due_date
+    )
     assert_equal @table_with_events, @calendar.generate
   end
 
