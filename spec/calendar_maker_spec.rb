@@ -78,8 +78,18 @@ describe Calendar do
     end
   end
 
+  describe '#events' do
+    it 'should be an array of events for this calendar' do
+      cal.events.should be_a_kind_of(Array)
+    end
+
+    it 'should be initialized as empty by default' do
+      Calendar.new.events.should be_empty
+    end
+  end
+
   describe '#add' do
-    it 'should add an event to the specified day' do
+    it 'should add events to the specified day' do
       cal.add [stub('yesterday', :due_at => Time.now - days(1))], :schedule_for => :due_at
     end
 

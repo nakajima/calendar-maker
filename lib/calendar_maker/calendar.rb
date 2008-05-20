@@ -1,17 +1,18 @@
 class Calendar
   include ViewHelpers
 
-  # <tt>:month</tt> <Integer>:: the month for the calendar
-  # <tt>:year</tt> <Integer>:: the year for the calendar
-  # <tt>:days</tt> <Hash>:: the days for the calendar, including scheduled events
-  attr_reader :month, :year, :days
+  # <tt>month</tt> <Integer>:: the month for the calendar
+  # <tt>year</tt> <Integer>:: the year for the calendar
+  # <tt>days</tt> <Hash>:: the days for the calendar, including scheduled events
+  # <tt>events</tt> <Array>:: the events for this calendar
+  attr_reader :month, :year, :days, :events
 
   def initialize(options={})
     @month    = options[:month]  || Time.now.month
     @year     = options[:year]   || Time.now.year
-    @events   = options[:events] || []
     @page     = Time.utc(@year, @month)
     @days     = Hash.new
+    @events   = options[:events] || []
     self.date = Date.new(@page.year, @page.month)
 
     days_in_month.times { |i| @days[i] = { :events => [] } }
@@ -21,20 +22,34 @@ class Calendar
   
   # The week day number the calendar starts on
   def starts_on
-    @date.wday
+    date.wday
   end
   
   # The week day number the calendar ends on
   def ends_on
-    (@date + days_in_month - 1).wday
+    (date + days_in_month - 1).wday
   end
   
+  # Adds some events to the calendar
+  #
+  # ==== Parameters
+  # +event_objects+ <Array>:: 
+  #   a list of objects with dates relating to this calendar
+  # +options+ <Hash>::
+  #   a Hash of options to configure the events added
+  # 
+  # ===== Options
+  # <tt>:schedule_for</tt>:: 
+  #   the method you can call on the event objects to get the date of their 
+  #   event
+  # <tt>:html_class</tt>::
+  #   see <tt>:schedule_for</tt>
   def add(event_objects, options={})
     raise ArgumentError, "Must specify :schedule_for attribute to assign events to days." unless options[:schedule_for]
     options[:html_class] ||= options[:schedule_for]
     event_objects.each do |event|
       schedule_for = event.send(options[:schedule_for])
-      if schedule_for && schedule_for.month == @page.month && schedule_for.year == @page.year
+      if schedule_for && schedule_for.month == month && schedule_for.year == year
         @events << options[:html_class] unless @events.include?(options[:html_class])
         @days[schedule_for.day][:events] << options[:html_class]
       end
