@@ -41,11 +41,27 @@ class Calendar
     end
   end
   
+  # Renders an instance to an HTML table
+  #
+  # ==== Parameters
+  # +options+ <Hash>::
+  #   a Hash of options. See Options below for further details
+  #
+  # ===== Options
+  # <tt>:header_length</tt> <Integer>::
+  #   the length of the string to use for month names
+  # <tt>:ignore_today</tt> <true,false>::
+  #   whether or not to give today's date a CSS class
+  #
+  # ==== Returns
+  # String
   def generate(options={})
     options[:header_length] ||= 1
     options[:ignore_today]  ||= false
-    build options
+    build(options) # see ViewHelpers
   end
+
+  alias_method :to_html, :generate
   
   # Borrowed from active_support
   def days_in_month
