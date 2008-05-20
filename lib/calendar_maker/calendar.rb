@@ -7,11 +7,12 @@ class Calendar
   attr_reader :month, :year, :days
 
   def initialize(options={})
-    @month  = options[:month]  || Time.now.month
-    @year   = options[:year]   || Time.now.year
-    @events = options[:events] || []
-    @page   = Time.utc(@year, @month)
-    @days   = Hash.new
+    @month    = options[:month]  || Time.now.month
+    @year     = options[:year]   || Time.now.year
+    @events   = options[:events] || []
+    @page     = Time.utc(@year, @month)
+    @days     = Hash.new
+    self.date = Date.new(@page.year, @page.month)
 
     days_in_month.times { |i| @days[i] = { :events => [] } }
   end
@@ -19,15 +20,13 @@ class Calendar
   alias_method :day, :days
   
   # The week day number the calendar starts on
-  #
-  # ==== Returns
-  # Integer
   def starts_on
-    @page.wday
+    @date.wday
   end
   
+  # The week day number the calendar ends on
   def ends_on
-    Time.utc(@page.year, @page.month, days_in_month).wday
+    (@date + days_in_month - 1).wday
   end
   
   def add(event_objects, options={})
@@ -58,5 +57,10 @@ class Calendar
       @page.month % 2 == 0 ? 31 : 30
     end
   end
+
+  private
+
+    # <tt>:date</tt> <Date>:: used internally for date manipulations
+    attr_accessor :date
   
 end
