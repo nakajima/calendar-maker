@@ -3,19 +3,20 @@ class Calendar
 
   # <tt>:month</tt> <Integer>:: the month for the calendar
   # <tt>:year</tt> <Integer>:: the year for the calendar
-  attr_reader :month, :year
+  # <tt>:days</tt> <Hash>:: the days for the calendar, including scheduled events
+  attr_reader :month, :year, :days
 
   def initialize(options={})
-    @month  = options[:month] || Time.now.month
-    @year   = options[:year]  || Time.now.year
+    @month  = options[:month]  || Time.now.month
+    @year   = options[:year]   || Time.now.year
     @events = options[:events] || []
-    @page = Time.utc(@year, @month)
-    @days   = { }; days_in_month.times { |i| @days[i] = { :events => [] } }
+    @page   = Time.utc(@year, @month)
+    @days   = Hash.new
+
+    days_in_month.times { |i| @days[i] = { :events => [] } }
   end
-  
-  def day
-    return @days
-  end
+
+  alias_method :day, :days
   
   def starts_on
     Time.utc(@page.year, @page.month, 1).wday
