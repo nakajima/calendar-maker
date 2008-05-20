@@ -18,8 +18,12 @@ class Calendar
 
   alias_method :day, :days
   
+  # The week day number the calendar starts on
+  #
+  # ==== Returns
+  # Integer
   def starts_on
-    Time.utc(@page.year, @page.month, 1).wday
+    @page.wday
   end
   
   def ends_on
