@@ -34,10 +34,10 @@ module ViewHelpers
     classes = []
     classes << 'inactive' unless test_field(week, day)
     classes << 'last_column' if day == 6
-    classes.concat(@days[@current_day][:events]) if @days[@current_day] && !@days[@current_day][:events].empty?
+    classes.concat(days[@current_day][:events]) if days[@current_day] && !days[@current_day][:events].empty?
     html = ""
     html << %( class="#{classes.join(' ')}") unless classes.empty?
-    if Time.now.mday == @page.mday && Time.now.mon == @page.mon
+    if Time.now.mday == date.mday && Time.now.mon == date.mon
       html << %( id="today") unless options[:ignore_today]
     end
     return html
