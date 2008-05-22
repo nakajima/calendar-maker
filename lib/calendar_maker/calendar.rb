@@ -1,3 +1,6 @@
+require 'rubygems'
+require 'ruby-debug'
+
 class Calendar
   include ViewHelpers
 
@@ -45,13 +48,14 @@ class Calendar
   # <tt>:html_class</tt>::
   #   see <tt>:schedule_for</tt>
   def add(event_objects, options={})
-    raise ArgumentError, "Must specify :schedule_for attribute to assign events to days." unless options[:schedule_for]
+    raise ArgumentError, "Must specify :schedule_for attribute to assign events to days" unless options[:schedule_for]
     options[:html_class] ||= options[:schedule_for]
     event_objects.each do |event|
       schedule_for = event.send(options[:schedule_for])
-      if schedule_for && schedule_for.month == month && schedule_for.year == year
-        @events << options[:html_class] unless @events.include?(options[:html_class])
-        @days[schedule_for.day][:events] << options[:html_class]
+      if event_okay?(schedule_for)
+        debugger
+        events << options[:html_class] unless events.include?(options[:html_class])
+        days[schedule_for.day][:events] << options[:html_class]
       end
     end
   end
@@ -93,5 +97,16 @@ class Calendar
 
     # <tt>:date</tt> <Date>:: used internally for date manipulations
     attr_accessor :date
+
+    # Checks some Date or Time object to see if it is the currently considered 
+    # Date or Time.
+    #
+    # ==== Parameters
+    # +schedule_for+ <~month, ~year>:: the event being examined
+    def event_okay?(schedule_for)
+      schedule_for && 
+        schedule_for.month == month && 
+        schedule_for.year  == year
+    end
   
 end
