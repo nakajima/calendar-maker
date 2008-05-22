@@ -104,7 +104,7 @@ describe Calendar do
     attr_accessor :calendar, :default_table, :table_with_events
 
     before(:each) do
-      self.calendar          = Calendar.new(:month => 'oct', :year => 2007)
+      self.calendar          = Calendar.new(:month => 10, :year => 2007)
       self.default_table     = File.read('spec/fixtures/default_table.html').chomp
       self.table_with_events = File.read('spec/fixtures/table_with_events.html').chomp
     end
