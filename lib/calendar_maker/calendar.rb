@@ -10,10 +10,10 @@ class Calendar
   def initialize(options={})
     @month    = options[:month]  || Time.now.month
     @year     = options[:year]   || Time.now.year
-    @page     = Time.utc(@year, @month)
     @days     = Hash.new
     @events   = options[:events] || []
-    self.date = Date.new(@page.year, @page.month)
+    page      = Time.utc(@year, @month)
+    self.date = Date.new(page.year, page.month)
 
     days_in_month.times { |i| @days[i] = { :events => [] } }
   end
