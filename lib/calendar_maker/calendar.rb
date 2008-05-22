@@ -1,6 +1,3 @@
-require 'rubygems'
-require 'ruby-debug'
-
 class Calendar
   include ViewHelpers
 
@@ -53,7 +50,6 @@ class Calendar
     event_objects.each do |event|
       schedule_for = event.send(options[:schedule_for])
       if event_okay?(schedule_for)
-        debugger
         events << options[:html_class] unless events.include?(options[:html_class])
         days[schedule_for.day][:events] << options[:html_class]
       end
@@ -84,12 +80,12 @@ class Calendar
   
   # Borrowed from active_support
   def days_in_month
-    if @page.month == 2
-      !@page.year.nil? && (@page.year % 4 == 0) && ((@page.year % 100 != 0) || (@page.year % 400 == 0)) ?  29 : 28
-    elsif @page.month <= 7
-      @page.month % 2 == 0 ? 30 : 31
+    if date.month == 2
+      date.leap?  ?  29 : 28
+    elsif date.month <= 7
+      date.month % 2 == 0 ? 30 : 31
     else
-      @page.month % 2 == 0 ? 31 : 30
+      date.month % 2 == 0 ? 31 : 30
     end
   end
 
