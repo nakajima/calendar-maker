@@ -1,7 +1,5 @@
 module ViewHelpers
   
-  DAYS_OF_THE_WEEK = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
-  
   def build(options)
     output = %(<table class="calendar">)
     output.then_add header(options[:header_length])
@@ -13,7 +11,7 @@ module ViewHelpers
   def header(options={})
     output = %(<tr class="calendar_header">).tab(2)
     7.times do |i|
-      output.then_add %(<th>#{DAYS_OF_THE_WEEK[i][0..0]}</th>).tab(4)
+      output.then_add %(<th>#{Date::DAYNAMES[i][0..0]}</th>).tab(4)
     end
     output.then_add %(</tr>).tab(2)
   end
