@@ -8,6 +8,7 @@ rescue
 end
 
 require 'date'
-require 'calendar_maker/string_extensions'
+
+require 'core_ext/string'
 require 'calendar_maker/view_helpers'
 require 'calendar_maker/calendar'
