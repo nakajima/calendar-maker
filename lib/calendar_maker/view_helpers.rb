@@ -2,13 +2,16 @@ module ViewHelpers
   
   def build(options)
     output = %(<table class="calendar">)
-    output.then_add header(options[:header_length])
+    output.then_add(header)
     output.then_add weeks(options)
-    output.then_add %(</table>)
+    output.then_add(%(</table>))
     return output
   end
+
+  private
   
-  def header(options={})
+  # Generates the header for the calendar table.
+  def header
     output = %(<tr class="calendar_header">).tab(2)
     7.times do |i|
       output.then_add %(<th>#{Date::DAYNAMES[i][0..0]}</th>).tab(4)
