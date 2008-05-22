@@ -11,6 +11,17 @@ module ViewHelpers
   private
   
   # Generates the header for the calendar table.
+  #
+  # ==== Example
+  #   <tr class="calendar_header">
+  #     <th>S</th>
+  #     <th>M</th>
+  #     <th>T</th>
+  #     <th>W</th>
+  #     <th>T</th>
+  #     <th>F</th>
+  #     <th>S</th>
+  #   </tr>
   def header
     output = %(<tr class="calendar_header">).tab(2)
     7.times do |i|
@@ -19,14 +30,21 @@ module ViewHelpers
     output.then_add %(</tr>).tab(2)
   end
   
+  # Generates the HTML table rows and cells for each week in a calendar.
+  #
+  # ==== Parameters
+  # +options+ <Hash>:: a Hash of options that +day_attributes+ accepts
+  #
+  # ==== Returns
+  # String
   def weeks(options={})
     output = ""
     @current_day = 1
     5.times do |week|
-      output << "\n" unless week == 0
-      output << %(<tr class="week_#{week+1}#{' last_row' if week == 4}">).tab(2)
+      output << "\n" unless week.zero?
+      output << %(<tr class="week_#{week.succ}#{' last_row' if week == 4}">).tab(2)
       7.times do |day|
-        output.then_add %(<td#{day_attributes(week+1, day, options)}>#{day_view(week+1, day)}</td>).tab(4)
+        output.then_add %(<td#{day_attributes(week.succ, day, options)}>#{day_view(week.succ, day)}</td>).tab(4)
       end
       output.then_add %(</tr>).tab(2)
     end
