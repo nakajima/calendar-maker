@@ -44,7 +44,11 @@ module ViewHelpers
   end
   
   def test_field(week, day)
-    return true unless ( week == 1 && day < starts_on ) or ( @current_day > days_in_month ) or ( week == 5 && day > ends_on )
+    !(
+      (week == 1 && day < starts_on) ||
+      (@current_day > days_in_month) ||
+      (week == 5 && day > ends_on )
+    )
   end
   
   def day_view(week, day)
