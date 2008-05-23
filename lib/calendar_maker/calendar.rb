@@ -12,6 +12,8 @@ class Calendar
     @year     = options[:year]   || Time.now.year
     @days     = Hash.new
     @events   = options[:events] || []
+
+    # Used incase the user specifies a string-based month. E.g. 'oct'.
     page      = Time.utc(@year, @month)
     self.date = Date.new(page.year, page.month)
 
