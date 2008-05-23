@@ -17,7 +17,8 @@ class Calendar
     page      = Time.utc(@year, @month)
     self.date = Date.new(page.year, page.month)
 
-    days_in_month.times { |i| @days[i] = { :events => [] } }
+    date.days_of_month.each { |i| @days[i] = { :events => [] } }
+#    days_in_month.times { |i| @days[i] = { :events => [] } }
   end
 
   alias_method :day, :days
@@ -29,7 +30,7 @@ class Calendar
   
   # The week day number the calendar ends on
   def ends_on
-    (date + days_in_month - 1).wday
+    Date.new(year, month, -1).wday
   end
   
   # Adds some events to the calendar
@@ -80,17 +81,6 @@ class Calendar
 
   alias_method :to_html, :generate
   
-  # Borrowed from active_support
-  def days_in_month
-    if date.month == 2
-      date.leap?  ?  29 : 28
-    elsif date.month <= 7
-      date.month % 2 == 0 ? 30 : 31
-    else
-      date.month % 2 == 0 ? 31 : 30
-    end
-  end
-
   private
 
     # <tt>:date</tt> <Date>:: used internally for date manipulations

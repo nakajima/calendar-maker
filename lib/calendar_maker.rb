@@ -2,9 +2,11 @@ $:.unshift(File.expand_path(File.dirname(__FILE__)))
 
 begin
   require 'facets'
+  require 'facets/date'
 rescue
   require 'rubygems'
   require 'facets'
+  require 'facets/date'
 end
 
 require 'date'

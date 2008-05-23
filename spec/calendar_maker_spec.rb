@@ -37,44 +37,9 @@ describe Calendar do
     end
   end
 
-  describe '#days_in_month' do
-    attr_accessor :expected_days_for_months
-
-    before(:each) do
-      self.expected_days_for_months = {
-        'jan' => 31, 
-        'feb' => 29, 
-        'mar' => 31, 
-        'apr' => 30, 
-        'may' => 31, 
-        'jun' => 30, 
-        'jul' => 31, 
-        'aug' => 31, 
-        'sep' => 30, 
-        'oct' => 31, 
-        'nov' => 30, 
-        'dec' => 31
-      }
-    end
-
-    it 'should return the number of days in a month' do
-      expected_days_for_months.each do |mon, count|
-        Calendar.new(:month => mon, :year => 2008).days_in_month.should == count
-      end
-    end
-
-    it 'should return 28 days for February, 2007' do
-      Calendar.new(:month => 2, :year => 2007).days_in_month.should == 28
-    end
-  end
-
   describe '#days' do
     it 'should save a Hash of all events on a day' do
       cal.day.should be_a_kind_of(Hash)
-    end
-
-    it 'should have as many keys as there are days in the month' do
-      cal.day.keys.length.should == cal.days_in_month
     end
   end
 
