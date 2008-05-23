@@ -44,30 +44,37 @@ module ViewHelpers
       output << "\n" unless week.zero?
       output << %(<tr class="week_#{week.succ}#{' last_row' if week == 4}">).tab(2)
       7.times do |day|
-        output.then_add %(<td#{day_attributes(week.succ, day, options)}>#{day_view(week.succ, day)}</td>).tab(4)
+        output.then_add %(<td#{day_attributes(week.succ, day)}>#{day_view(week.succ, day)}</td>).tab(4)
       end
       output.then_add %(</tr>).tab(2)
     end
     return output
   end
   
-  def day_attributes(week, day, options={})
+  # Generates the attributes for a day's TD tag. If the TD being generated 
+  # represents today, the TD will have a 'today' ID.
+  #
+  # ==== Parameters
+  # +week+ <Integer>:: the week under examination
+  # +day+ <Integer>:: the day under examination
+  def day_attributes(week, day)
+    html  = %( class="#{day_attribute_classes(week, day)}")
+    html << %( id="today") if Time.now.mday == date.mday && Time.now.mon == date.mon
+    return html
+  end
+
+  def day_attribute_classes(week, day)
     classes = []
     classes << 'inactive' unless test_field(week, day)
     classes << 'last_column' if day == 6
     classes.concat(days[@current_day][:events]) if days[@current_day] && !days[@current_day][:events].empty?
-    html = ""
-    html << %( class="#{classes.join(' ')}") unless classes.empty?
-    if Time.now.mday == date.mday && Time.now.mon == date.mon
-      html << %( id="today") unless options[:ignore_today]
-    end
-    return html
+    classes.join(' ')
   end
   
   def test_field(week, day)
     !(
-      (week == 1 && day < starts_on) ||
-      (@current_day > days_in_month) ||
+      (week == 1 && day < starts_on)      ||
+      (@current_day > date.days_in_month) ||
       (week == 5 && day > ends_on )
     )
   end
