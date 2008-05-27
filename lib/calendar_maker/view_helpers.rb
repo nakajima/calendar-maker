@@ -33,6 +33,8 @@ module ViewHelpers
     end
     output.then_add %(</tr>).tab(2)
   end
+
+  attr_accessor :current_day
   
   # Generates the HTML table rows and cells for each week in a calendar.
   #
@@ -43,7 +45,8 @@ module ViewHelpers
   # String
   def weeks(options={})
     output = ""
-    @current_day = 1
+    self.current_day = 1
+#    @current_day = 1
     5.times do |week|
       output << "\n" unless week.zero?
       output << %(<tr class="week_#{week.succ}#{' last_row' if week == 4}">).tab(2)
@@ -81,7 +84,7 @@ module ViewHelpers
     classes = []
     classes << 'inactive' unless day_inside_calendar?(week, day)
     classes << 'last_column' if day == 6
-    classes.concat(days[@current_day][:events]) if days[@current_day] && !days[@current_day][:events].empty?
+    classes.concat(days[current_day][:events]) if days[current_day] && !days[current_day][:events].empty?
     classes.join(' ')
   end
   
@@ -93,7 +96,7 @@ module ViewHelpers
   def day_inside_calendar?(week, day)
     !(
       (week == 1 && day < starts_on)      ||
-      (@current_day > date.days_in_month) ||
+      (current_day > date.days_in_month) ||
       (week == 5 && day > ends_on )
     )
   end
@@ -105,8 +108,8 @@ module ViewHelpers
   # +day+ <Integer>:: the week day number (see Time.wday)
   def day_view(week, day)
     if day_inside_calendar?(week, day)
-      response = %(<a href="#">#{@current_day}</a>)
-      @current_day += 1
+      response = %(<a href="#">#{current_day}</a>)
+      self.current_day = current_day.succ
     else
       response = ""
     end
