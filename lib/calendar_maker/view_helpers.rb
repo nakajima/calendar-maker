@@ -1,5 +1,11 @@
 module ViewHelpers
-  
+  # Generates the HTML for a calendar
+  #
+  # ==== Recognized Options
+  # 
+  #
+  # ==== Returns
+  # String 
   def build(options)
     output = %(<table class="calendar">)
     output.then_add(header)
@@ -63,15 +69,30 @@ module ViewHelpers
     return html
   end
 
+  # Ascertains the values for the +class+ attribute of a day's TD tag. If the 
+  # day is weekend, or falls outside of the calendar, it will be given the 
+  # +inactive+ class. Saturdays are given the +last_column+ class.
+  #
+  # ==== Parameters
+  # +week+ <Integer>:: the week number in the month
+  # +day+ <Integer>:: the week day number (see Time.wday)
+  #
+  # ==== Returns
+  # String
   def day_attribute_classes(week, day)
     classes = []
-    classes << 'inactive' unless test_field(week, day)
+    classes << 'inactive' unless day_inside_calendar?(week, day)
     classes << 'last_column' if day == 6
     classes.concat(days[@current_day][:events]) if days[@current_day] && !days[@current_day][:events].empty?
     classes.join(' ')
   end
   
-  def test_field(week, day)
+  # Tests to see if a given point falls outside the calendar.
+  #
+  # ==== Parameters
+  # +week+ <Integer>:: the week number in the month
+  # +day+ <Integer>:: the week day number (see Time.wday)
+  def day_inside_calendar?(week, day)
     !(
       (week == 1 && day < starts_on)      ||
       (@current_day > date.days_in_month) ||
@@ -79,8 +100,13 @@ module ViewHelpers
     )
   end
   
+  # Generates a link to the current day
+  #
+  # ==== Parameters
+  # +week+ <Integer>:: the week number in the month
+  # +day+ <Integer>:: the week day number (see Time.wday)
   def day_view(week, day)
-    if test_field(week, day)
+    if day_inside_calendar?(week, day)
       response = %(<a href="#">#{@current_day}</a>)
       @current_day += 1
     else
@@ -88,5 +114,4 @@ module ViewHelpers
     end
     return response
   end
-  
 end
