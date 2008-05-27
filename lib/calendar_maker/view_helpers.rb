@@ -30,8 +30,8 @@ module ViewHelpers
   #   </tr>
   def header
     output = %(<tr class="calendar_header">).tab(2)
-    7.times do |i|
-      output.then_add %(<th>#{Date::DAYNAMES[i][0..0]}</th>).tab(4)
+    Date::DAYNAMES.each do |day_name|
+      output.then_add ['<th>', day_name[0..0], '</th>'].join.tab(4)
     end
     output.then_add %(</tr>).tab(2)
   end
