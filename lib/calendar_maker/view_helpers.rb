@@ -9,7 +9,7 @@ module ViewHelpers
   def build(options)
     output = %(<table class="calendar">)
     output.then_add(header)
-    output.then_add weeks(options)
+    output.then_add(weeks)
     output.then_add(%(</table>))
     return output
   end
