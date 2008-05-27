@@ -46,7 +46,6 @@ module ViewHelpers
   def weeks(options={})
     output = ""
     self.current_day = 1
-#    @current_day = 1
     5.times do |week|
       output << "\n" unless week.zero?
       output << %(<tr class="week_#{week.succ}#{' last_row' if week == 4}">).tab(2)
@@ -106,6 +105,8 @@ module ViewHelpers
   # ==== Parameters
   # +week+ <Integer>:: the week number in the month
   # +day+ <Integer>:: the week day number (see Time.wday)
+  #--
+  # FIXME Empty days should have &nbsp;
   def day_view(week, day)
     if day_inside_calendar?(week, day)
       response = %(<a href="#">#{current_day}</a>)
