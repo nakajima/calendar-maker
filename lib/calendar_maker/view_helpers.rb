@@ -1,18 +1,16 @@
 module ViewHelpers
   # Generates the HTML for a calendar
   #
-  # ==== Recognized Options
-  # 
-  #
   # ==== Returns
   # String 
-  def build(options)
+  def generate
     output = %(<table class="calendar">)
     output.then_add(header)
     output.then_add(weeks)
     output.then_add(%(</table>))
-    return output
   end
+
+  alias_method :to_html, :generate
 
   private
   
