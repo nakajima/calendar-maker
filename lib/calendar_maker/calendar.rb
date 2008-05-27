@@ -18,7 +18,6 @@ class Calendar
     self.date = Date.new(page.year, page.month)
 
     date.days_of_month.each { |i| @days[i] = { :events => [] } }
-#    days_in_month.times { |i| @days[i] = { :events => [] } }
   end
 
   alias_method :day, :days
