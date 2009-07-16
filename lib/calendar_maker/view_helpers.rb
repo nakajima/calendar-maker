@@ -2,7 +2,7 @@ module ViewHelpers
   # Generates the HTML for a calendar
   #
   # ==== Returns
-  # String 
+  # String
   def generate
     output = %(<table class="calendar">)
     output.then_add(header)
@@ -13,7 +13,7 @@ module ViewHelpers
   alias_method :to_html, :generate
 
   private
-  
+
   # Generates the header for the calendar table.
   #
   # ==== Example
@@ -35,7 +35,7 @@ module ViewHelpers
   end
 
   attr_accessor :current_day
-  
+
   # Generates the HTML table rows and cells for each week in a calendar.
   #
   # ==== Parameters
@@ -56,8 +56,8 @@ module ViewHelpers
     end
     return output
   end
-  
-  # Generates the attributes for a day's TD tag. If the TD being generated 
+
+  # Generates the attributes for a day's TD tag. If the TD being generated
   # represents today, the TD will have a 'today' ID.
   #
   # ==== Parameters
@@ -69,8 +69,8 @@ module ViewHelpers
     return html
   end
 
-  # Ascertains the values for the +class+ attribute of a day's TD tag. If the 
-  # day is weekend, or falls outside of the calendar, it will be given the 
+  # Ascertains the values for the +class+ attribute of a day's TD tag. If the
+  # day is weekend, or falls outside of the calendar, it will be given the
   # +inactive+ class. Saturdays are given the +last_column+ class.
   #
   # ==== Parameters
@@ -86,7 +86,7 @@ module ViewHelpers
     classes.concat(days[current_day][:events]) if days[current_day] && !days[current_day][:events].empty?
     classes.join(' ')
   end
-  
+
   # Tests to see if a given point falls outside the calendar.
   #
   # ==== Parameters
@@ -95,11 +95,11 @@ module ViewHelpers
   def day_inside_calendar?(week, day)
     !(
       (week == 1 && day < starts_on)      ||
-      (current_day > date.days_in_month) ||
+      (current_day > Time.days_in_month(date.month, date.year)) ||
       (week == 5 && day > ends_on )
     )
   end
-  
+
   # Generates a link to the current day
   #
   # ==== Parameters

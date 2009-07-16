@@ -64,7 +64,7 @@ describe Calendar do
       }.should raise_error(ArgumentError)
     end
   end
-  
+
   describe '#generate' do
     attr_accessor :calendar, :default_table, :table_with_events
 
@@ -82,10 +82,10 @@ describe Calendar do
       Time.stub!(:now).and_return(n)
       calendar.add(
         [
-          mock('5 days from now', :due_date => Time.now + days(5)), 
+          mock('5 days from now', :due_date => Time.now + days(5)),
           mock('3 days from now', :due_date => Time.now + days(3))
-        ], 
-        :html_class   => 'due_date_class', 
+        ],
+        :html_class   => 'due_date_class',
         :schedule_for => :due_date
       )
 

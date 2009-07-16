@@ -17,32 +17,32 @@ class Calendar
     page      = Time.utc(@year, @month)
     self.date = Date.new(page.year, page.month)
 
-    date.days_of_month.each { |i| @days[i] = { :events => [] } }
+    Time.days_in_month(date.month, date.year).times { |i| @days[i+1] = { :events => [] } }
   end
 
   alias_method :day, :days
-  
+
   # The week day number the calendar starts on
   def starts_on
     date.wday
   end
-  
+
   # The week day number the calendar ends on
   def ends_on
     Date.new(year, month, -1).wday
   end
-  
+
   # Adds some events to the calendar
   #
   # ==== Parameters
-  # +event_objects+ <Array>:: 
+  # +event_objects+ <Array>::
   #   a list of objects with dates relating to this calendar
   # +options+ <Hash>::
   #   a Hash of options to configure the events added
-  # 
+  #
   # ===== Options
-  # <tt>:schedule_for</tt>:: 
-  #   the method you can call on the event objects to get the date of their 
+  # <tt>:schedule_for</tt>::
+  #   the method you can call on the event objects to get the date of their
   #   event
   # <tt>:html_class</tt>::
   #   see <tt>:schedule_for</tt>
@@ -63,15 +63,15 @@ class Calendar
   # <tt>:date</tt> <Date>:: used internally for date manipulations
   attr_accessor :date
 
-  # Checks some Date or Time object to see if it is the currently considered 
+  # Checks some Date or Time object to see if it is the currently considered
   # Date or Time.
   #
   # ==== Parameters
   # +schedule_for+ <~month, ~year>:: the event being examined
   def event_okay?(schedule_for)
-    schedule_for && 
-      schedule_for.month == month && 
+    schedule_for &&
+      schedule_for.month == month &&
       schedule_for.year  == year
   end
-  
+
 end
